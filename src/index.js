@@ -1,0 +1,127 @@
+import { Client, GuildMember, IntentsBitField } from "discord.js";
+import { JSDOM } from "jsdom";
+
+import { config } from "./config.js";
+import osuApi from "./osuApi.js";
+import topicStorageService from "./topicStorageService.js";
+
+const seenTopicIds = topicStorageService.getSeenTopicIds();
+const tournamentForumId = 55;
+const pollMs = 300000;
+
+const client = new Client({
+  intents: [
+    IntentsBitField.Flags.Guilds,
+    IntentsBitField.Flags.GuildMembers,
+    IntentsBitField.Flags.GuildMessages,
+    IntentsBitField.Flags.MessageContent,
+    IntentsBitField.Flags.GuildPresences,
+    IntentsBitField.Flags.GuildModeration,
+  ],
+});
+
+async function fetchLastPostData(forumId) {
+  const response = await fetch(`https://osu.ppy.sh/community/forums/${forumId}?sort=created#topics`);
+  const text = await response.text();
+  const dom = new JSDOM(text);
+  const htmlDoc = dom.window.document;
+  const element = htmlDoc.querySelector("#topics .forum-list__items .forum-topic-entry__content a");
+
+  if (element == null) {
+    throw new Error("Chega fi quebrou o web scraping it's over -100 green aura 💀");
+  }
+
+  return {
+    topicId: element.href.match(/\d+/g).at(-1),
+    title: element.textContent.trim(),
+    link: element.href,
+  };
+}
+
+async function pollLastTopic() {
+  let guild, targetChannel, role;
+  let guild2, targetChannel2, role2;
+
+  try {
+    // Server principal (esnupicore)
+    guild = await client.guilds.fetch("1168209025763135578");
+    targetChannel = await guild.channels.fetch("1356839367578222673");
+    role = await guild.roles.fetch("1364637261026689206");
+
+    // Server mechanics
+    guild2 = await client.guilds.fetch("1381385016235524156");
+    targetChannel2 = await guild2.channels.fetch("1381389103098232963");
+    role2 = await guild2.roles.fetch("1381413534528835664");
+  } catch (error) {
+    console.error("Erro ao buscar os canais ou roles:", error);
+    return;
+  }
+
+  try {
+    const { topicId, title, link } = await fetchLastPostData(tournamentForumId);
+
+    const excludeStrings = ["ctb", "o!m", "taiko", "4k", "7k"];
+
+    if (excludeStrings.some((excludeString) => title.toLowerCase().includes(excludeString))) {
+      return;
+    }
+
+    if (seenTopicIds.includes(topicId)) {
+      return;
+    }
+
+    seenTopicIds.push(topicId);
+    topicStorageService.updateSeenTopicIds(seenTopicIds);
+
+    // Bagui de mandar mensagem no discord
+    try {
+      targetChannel.send(`**[${title}](${link})**\n${role}`);
+    } catch (e) {
+      console.error("It's over, num deu pra mandar a mensagem pro esnupicore 💀: ", e);
+    }
+    try {
+      targetChannel2.send(`**[${title}](${link})**\n${role2} mano...`);
+    } catch (e) {
+      console.error("GG aqui acabo num deu pra mandar a mensagem pro MECHANICS 💀: ", e);
+    }
+  } catch (e) {
+    const memberIdsToPing = ["239388097714978817", "307586669220200448", "395422473929359370"];
+    const membersToPing = guild.members.cache.filter((member) => memberIdsToPing.includes(member.id));
+    const memberNames = membersToPing.map((member) => member.toString());
+
+    await targetChannel.send(`⚠️ ${e.message}\n\n${memberNames.join("")}`);
+    console.error(e);
+  }
+}
+
+setInterval(async () => {
+  await pollLastTopic();
+}, pollMs);
+
+client.on("ready", async (c) => {
+  console.log(`🦈 ${c.user.username} is on!!!🦈`);
+
+  await pollLastTopic();
+});
+
+client.on("messageCreate", async (message) => {
+  if (message.author.bot) {
+    return;
+  }
+
+  const replies = ["me mata", "se mata", ":kms:", "kys"];
+
+  if (replies.some((reply) => message.content.includes(reply))) {
+    await message.channel.send("https://files.catbox.moe/q6z1hs.mp4");
+  }
+});
+
+client.on("guildMemberAdd", async (member) => {
+  const roleGente = member.guild.roles.cache.find((role) => role.name === "gente");
+
+  await member.roles.add(roleGente);
+});
+
+client.login(config.TOKEN);
+// Jashin
+// eu odeio JavaScript puro - Nyash.
