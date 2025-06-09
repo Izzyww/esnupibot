@@ -4,6 +4,7 @@ import { JSDOM } from "jsdom";
 import { config } from "./config.js";
 import osuApi from "./osuApi.js";
 import topicStorageService from "./topicStorageService.js";
+import addRole from "./utils/addRole.js";
 
 const seenTopicIds = topicStorageService.getSeenTopicIds();
 const tournamentForumId = 55;
@@ -44,14 +45,14 @@ async function pollLastTopic() {
 
   try {
     // Server principal (esnupicore)
-    guild = await client.guilds.fetch("1168209025763135578");
-    targetChannel = await guild.channels.fetch("1356839367578222673");
-    role = await guild.roles.fetch("1364637261026689206");
+    guild = await client.guilds.fetch(config.ESNUPICORE.guildId);
+    targetChannel = await guild.channels.fetch(config.ESNUPICORE.channelId);
+    role = await guild.roles.fetch(config.ESNUPICORE.pingRoleId);
 
     // Server mechanics
-    guild2 = await client.guilds.fetch("1381385016235524156");
-    targetChannel2 = await guild2.channels.fetch("1381389103098232963");
-    role2 = await guild2.roles.fetch("1381413534528835664");
+    guild2 = await client.guilds.fetch(config.MECHANICS.guildId);
+    targetChannel2 = await guild2.channels.fetch(config.MECHANICS.channelId);
+    role2 = await guild2.roles.fetch(config.MECHANICS.pingRoleId);
   } catch (error) {
     console.error("Erro ao buscar os canais ou roles:", error);
     return;
@@ -117,9 +118,11 @@ client.on("messageCreate", async (message) => {
 });
 
 client.on("guildMemberAdd", async (member) => {
-  const roleGente = member.guild.roles.cache.find((role) => role.name === "gente");
-
-  await member.roles.add(roleGente);
+  if (member.guild.id === config.ESNUPICORE.guildId) {
+    await addRole(member, config.ESNUPICORE.memberRoleId);
+  } else if (member.guild.id === config.MECHANICS.guildId) {
+    await addRole(member, config.MECHANICS.memberRoleId);
+  }
 });
 
 client.login(config.TOKEN);
