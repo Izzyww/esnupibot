@@ -57,6 +57,13 @@ function shouldExcludeTopic(title) {
   }
 
   return false;
+
+/**edge cases example: 
+[STD] | Winner's Circle 2025 | #4,000 - #99,999 BWS | Player and Staff Registrations Open!
+[STD] American Cup 2025 (3,2k - 200k) {NA, CA, SA Players Only} PLAYER REGISTATIONS OPEN
+
+tl;dr any broken number does not work
+**/
 }
 
 async function pollLastTopic() {
