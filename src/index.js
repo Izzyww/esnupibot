@@ -50,8 +50,8 @@ function shouldExcludeTopic(title) {
 
   if (match != null) {
     const min = Number(match[1].toLowerCase().replace("k", "000"));
-    
-    if (min <= minRankThreshold) {
+
+    if (min > minRankThreshold) {
       return true;
     }
   }
@@ -99,7 +99,7 @@ async function pollLastTopic() {
       console.error("It's over, num deu pra mandar a mensagem pro esnupicore 💀: ", e);
     }
     try {
-      targetChannel2.send(`**[${title}](${link})**\n${role2} mano...`);
+      targetChannel2.send(`**[${title}](${link})**\n${role2}`);
     } catch (e) {
       console.error("GG aqui acabo num deu pra mandar a mensagem pro MECHANICS 💀: ", e);
     }
