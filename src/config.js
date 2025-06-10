@@ -13,16 +13,19 @@ const ESNUPICORE = {
     channelId: "1356839367578222673",
     pingRoleId: "1364637261026689206",
     memberRoleId: "1364402339724787752",
-}
+};
 const MECHANICS = {
     guildId: "1381385016235524156",
     channelId: "1381389103098232963",
     pingRoleId: "1381413534528835664",
     memberRoleId: "1381413534528835664",
-}
+};
+
+const MIN_RANK_THRESHOLD = 2000; // Minimum rank threshold to exclude topics
 
 export const config = {
     TOKEN,
     ESNUPICORE,
-    MECHANICS
+    MECHANICS,
+    MIN_RANK_THRESHOLD,
 };
