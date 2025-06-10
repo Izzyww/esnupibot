@@ -5,14 +5,14 @@ import { config } from "../config.js";
  * @param {string} rankString Rank string to parse.
  * @returns {number} Rank as a number.
  */
-function parseRank(rankString: string): number {
+function parseRank(rankString) {
     if (!rankString) {
         return 0;
     }
 
     const lcRank = rankString.toLowerCase(); // lc = lower case
     if (lcRank.includes("k")) {
-        const numericValue = Number(lcRank.replace(",", ".").replace("k", ""));
+        const numericValue = Number(lcRank.replace("k", ""));
         return numericValue * 1000;
     }
 
@@ -24,7 +24,7 @@ function parseRank(rankString: string): number {
  * @param {string} title Topic tittle
  * @return {boolean} True if the topic should be excluded & false if not.
  */
-export default function shouldExcludeTopic(title: string): boolean {
+export default function shouldExcludeTopic(title) {
     const excludeStrings = ["ctb", "o!m", "taiko", "4k", "7k"];
     const minRankThreshold = config.MIN_RANK_THRESHOLD;
 
@@ -32,7 +32,7 @@ export default function shouldExcludeTopic(title: string): boolean {
         return true;
     }
 
-    const match = title.match(/(\d+([.,]\d+)?k?)\s*-\s*\d+([.,]\d+)?k?/i);
+    const match = title.match(/(\d+(\.\d+)?k?)\s*-\s*\d+(\.\d+)?k?/i);
 
     if (match != null) {
         const minRank = parseRank(match[1]);

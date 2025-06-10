@@ -7,9 +7,9 @@ const __dirname = path.dirname(__filename);
 
 const filename = path.join(__dirname, "seenTopicIds.json");
 
-function getSeenTopicIds(): string[] {
+function getSeenTopicIds() {
     try {
-        const content = fs.readFileSync(filename, "utf-8");
+        const content = fs.readFileSync(filename);
         const seenTopicIds = JSON.parse(content);
 
         return seenTopicIds;
@@ -18,7 +18,7 @@ function getSeenTopicIds(): string[] {
     }
 }
 
-function updateSeenTopicIds(seenTopicIds: string[]): void {
+function updateSeenTopicIds(seenTopicIds) {
     const content = JSON.stringify(seenTopicIds, null, " ".repeat(4));
 
     fs.writeFileSync(filename, content);

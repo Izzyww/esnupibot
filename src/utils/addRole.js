@@ -5,7 +5,7 @@ import { GuildMember } from "discord.js";
  * @param {GuildMember} member The member object that will receive the role
  * @param {string} roleId The ID of the role to be added
  */
-export async function addRole(member: GuildMember, roleId: string) {
+export default async function addRole(member, roleId) {
     if (!member || !roleId) {
         console.error("Not enough parameters provided to addRole function");
         return;
