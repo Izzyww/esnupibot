@@ -13,8 +13,7 @@ function getSeenTopicIds() {
         const seenTopicIds = JSON.parse(content);
 
         return seenTopicIds;
-    }
-    catch (e) {
+    } catch (e) {
         return [];
     }
 }
@@ -28,6 +27,6 @@ function updateSeenTopicIds(seenTopicIds) {
 const topicStorageService = {
     getSeenTopicIds,
     updateSeenTopicIds,
-}
+};
 
 export default topicStorageService;
