@@ -10,7 +10,8 @@ function parseRank(rankString) {
         return 0;
     }
 
-    const lcRank = rankString.toLowerCase(); // lc = lower case
+    const tranformedRank = rankString.replace(",", ".");
+    const lcRank = tranformedRank.toLowerCase(); // lc = lower case
     if (lcRank.includes("k")) {
         const numericValue = Number(lcRank.replace("k", ""));
         return numericValue * 1000;
@@ -32,7 +33,7 @@ export default function shouldExcludeTopic(title) {
         return true;
     }
 
-    const match = title.match(/(\d+(\.\d+)?k?)\s*-\s*\d+(\.\d+)?k?/i);
+    const match = title.match(/(\d+([.,]\d+)?k?)\s*-\s*\d+([.,]\d+)?k?/i);
 
     if (match != null) {
         const minRank = parseRank(match[1]);
