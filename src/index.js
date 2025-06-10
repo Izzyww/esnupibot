@@ -1,8 +1,7 @@
-import { Client, GuildMember, IntentsBitField } from "discord.js";
+import { Client, IntentsBitField } from "discord.js";
 import { JSDOM } from "jsdom";
 
 import { config } from "./config.js";
-import osuApi from "./osuApi.js";
 import topicStorageService from "./topicStorageService.js";
 import addRole from "./utils/addRole.js";
 
