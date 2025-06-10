@@ -46,11 +46,11 @@ function shouldExcludeTopic(title) {
     return true;
   }
 
-  const match = title.match(/(\d+k?)\s*-\s*\d+k?/);
+  const match = title.match(/(\d+k?)\s*-\s*\d+k?/i);
 
   if (match != null) {
-    const min = Number(match[1].replace("k", "000"));
-
+    const min = Number(match[1].toLowerCase().replace("k", "000"));
+    
     if (min <= minRankThreshold) {
       return true;
     }
