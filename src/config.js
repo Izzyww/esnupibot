@@ -21,8 +21,11 @@ const MECHANICS = {
     memberRoleId: "1381413534528835664",
 };
 
+const MIN_RANK_THRESHOLD = 2000; // Minimum rank threshold to exclude topics
+
 export const config = {
     TOKEN,
     ESNUPICORE,
     MECHANICS,
+    MIN_RANK_THRESHOLD,
 };

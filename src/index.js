@@ -2,8 +2,11 @@ import { Client, IntentsBitField } from "discord.js";
 import { JSDOM } from "jsdom";
 
 import { config } from "./config.js";
-import topicStorageService from "./topicStorageService.js";
+
+// Utilities
+import topicStorageService from "./utils/topicStorageService.js";
 import addRole from "./utils/addRole.js";
+import shouldExcludeTopic from "./utils/shouldExcludeTopic.js";
 
 const seenTopicIds = topicStorageService.getSeenTopicIds();
 const tournamentForumId = 55;
@@ -40,27 +43,6 @@ async function fetchLastPostData(forumId) {
         title: element.textContent.trim(),
         link: element.href,
     };
-}
-
-function shouldExcludeTopic(title) {
-    const excludeStrings = ["ctb", "o!m", "taiko", "4k", "7k"];
-    const minRankThreshold = 2000;
-
-    if (excludeStrings.some((excludeString) => title.toLowerCase().includes(excludeString))) {
-        return true;
-    }
-
-    const match = title.match(/(\d+k?)\s*-\s*\d+k?/i);
-
-    if (match != null) {
-        const min = Number(match[1].toLowerCase().replace("k", "000"));
-
-        if (min > minRankThreshold) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 async function pollLastTopic() {
