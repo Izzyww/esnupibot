@@ -39,6 +39,27 @@ async function fetchLastPostData(forumId) {
   };
 }
 
+function shouldExcludeTopic(title) {
+  const excludeStrings = ["ctb", "o!m", "taiko", "4k", "7k"];
+  const minRankThreshold = 2000;
+
+  if (excludeStrings.some((excludeString) => title.toLowerCase().includes(excludeString))) {
+    return true;
+  }
+
+  const match = title.match(/(\d+k?)\s*-\s*\d+k?/);
+
+  if (match != null) {
+    const min = Number(match[1].replace("k", "000"));
+
+    if (min <= minRankThreshold) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 async function pollLastTopic() {
   let guild, targetChannel, role;
   let guild2, targetChannel2, role2;
@@ -61,9 +82,7 @@ async function pollLastTopic() {
   try {
     const { topicId, title, link } = await fetchLastPostData(tournamentForumId);
 
-    const excludeStrings = ["ctb", "o!m", "taiko", "4k", "7k"];
-
-    if (excludeStrings.some((excludeString) => title.toLowerCase().includes(excludeString))) {
+    if (shouldExcludeTopic(title)) {
       return;
     }
 
