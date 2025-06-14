@@ -9,8 +9,6 @@ import { IPostData } from "../types/IPostData.js";
 import shouldExcludeTopic from "./shouldExcludeTopic.js";
 import topicStorageService from "./topicStorageService.js";
 
-const seenTopicIds = topicStorageService.getSeenTopicIds();
-
 async function fetchLastPostData(forumId: number): Promise<IPostData> {
     const response = await fetch(
         `https://osu.ppy.sh/community/forums/${forumId}?sort=created#topics`,
@@ -40,6 +38,7 @@ async function fetchLastPostData(forumId: number): Promise<IPostData> {
 }
 
 export async function pollLastTopic(client: Client, config: Config) {
+    const seenTopicIds = topicStorageService.getSeenTopicIds();
     let esnupicore: { guild: Guild; channel: TextChannel; role: Role };
     let mechanics: { guild: Guild; channel: TextChannel; role: Role };
 

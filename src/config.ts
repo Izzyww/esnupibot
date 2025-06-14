@@ -18,7 +18,7 @@ export const config: Config = {
     MECHANICS: {
         guildId: "1381385016235524156",
         channelId: "1381389103098232963",
-        pingRoleId: "1381413534528835664",
+        pingRoleId: "1381413534528835664", // For Prod: 1381413534528835664, For Test: 1382109979506638959
         memberRoleId: "1381413534528835664",
     },
     MIN_RANK_THRESHOLD: 2000,

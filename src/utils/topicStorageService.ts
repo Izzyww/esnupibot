@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const filename = path.join(__dirname, "seenTopicIds.json");
+const filename = path.join(__dirname, "..", "seenTopicIds.json");
 
 function getSeenTopicIds(): string[] {
     try {
